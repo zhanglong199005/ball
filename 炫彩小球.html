@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <style type="text/css">
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        
+        div{
+            width: 600px;
+            height: 400px;
+            margin: 100px auto;
+            position: relative;
+        }
+        p{
+            border-radius: 50%;
+            position: absolute;
+            background-size: 100% 100%;
+        }
+
+    </style>
+</head>
+<body>
+<script type="text/javascript">
+     function Ballon(x,y){
+        this.dom = null;
+        this.r = 30;
+        this.bg = ["images/1.png","images/2.png","images/3.png","images/4.png","images/5.png","images/6.png"];
+        this.x = x;
+        this.y = y;
+        do{
+             this.dx = parseInt(Math.random()*10-5);
+             this.dy = parseInt(Math.random()*10-5);
+        }while(this.dx==0&&this.dy==0);
+
+        // this.removeBall();
+        this.init();
+        this.move();
+        ballArr.push(this);
+        this.dom.style.backgroundImage = "url("+this.bg[parseInt(Math.random()*6)]+")";
+     }
+     Ballon.prototype.init = function(){
+        this.dom = document.createElement("p");
+        document.body.appendChild(this.dom);
+        this.dom.style.width = 2*this.r+"px";
+        this.dom.style.height = 2*this.r+"px";
+        this.dom.style.left = this.x-this.r+"px";
+        this.dom.style.top = this.y-this.r+"px";
+     }
+     Ballon.prototype.move = function(){
+        this.r-=0.6;
+        if(this.r < 3){
+            this.removeBall();
+        }
+        this.x+=this.dx;
+        this.y+=this.dy;
+        this.dom.style.left = this.x-this.r+"px";
+        this.dom.style.top = this.y-this.r+"px";
+        this.dom.style.width = 2*this.r+"px";
+        this.dom.style.height = 2*this.r+"px";
+     }
+     Ballon.prototype.removeBall = function(){
+        document.body.removeChild(this.dom);
+        for(var i = 0;i<ballArr.length;i++){
+            if(ballArr[i] == this){
+                ballArr.splice(i,1);
+            }
+        }
+     }
+     var ballArr = [];
+     var isImg = true;
+     document.onmousemove = function(event){
+        if(!isImg) return;
+        var x =event.clientX;
+        var y =event.clientY;
+            new Ballon(x,y);
+            isImg = false;
+        setTimeout(function(){
+            isImg = true;
+        },20)
+     }
+
+     setInterval(function(){
+        ballArr.forEach(function(item){
+            item&&item.move();
+        })
+     },20)
+
+</script>
+</body>
+</html>
